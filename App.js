@@ -1,58 +1,75 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import TabContext from '@material-ui/lab/TabContext';
-import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Rentfor from './Rentform';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: '25ch',
-    },
   },
 }));
 
-export default function LabTabs() {
+export default function SimpleTabs() {
   const classes = useStyles();
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
 
   return (
     <>
     <div className={classes.root}>
-      <TabContext value={value}>
-        <AppBar position="static">
-          <TabList onChange={handleChange} aria-label="simple tabs example">
-            <Tab label="Item One" value="1" />
-            <Tab label="Item Two" value="2" />
-            <Tab label="Item Three" value="3" />
-          </TabList>
-        </AppBar>
-        <TabPanel value="1">Home</TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
-        <TabPanel value="3">Item Three</TabPanel>
-      </TabContext>
-    </div>
-
-    <div>
-      <form>
-      <TextField id="standard-name" label="Name" value={name} onChange={handleChange} />
-        <TextField id="standard-uncontrolled" label="Uncontrolled" defaultValue="foo" />
-      </form>
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tab label="Item One" {...a11yProps(0)} />
+          <Tab label="Item Two" {...a11yProps(1)} />
+          <Tab label="Item Three" {...a11yProps(2)} />
+        </Tabs>
+      </AppBar>
+      <hr></hr>
+      <Rentfor/>
     </div>
 
     </>
-
   );
 }
